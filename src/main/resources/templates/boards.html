@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.4.1-1/css/bootstrap.css"/>
+    <script type="text/javascript" src="/webjars/jquery/3.4.0/jquery.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/4.4.1-1/js/bootstrap.js"></script>
+    <title>Title</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>No</th>
+                <th>분류</th>
+                <th>제목</th>
+                <th>등록자</th>
+                <th>담당자</th>
+                <th>등록일시</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="board: ${boards}">
+                <td th:text="${board.id}"></td>
+                <td th:text="${board.csType.name}"></td>
+                <td th:text="${board.title}"></td>
+                <td th:text="${board.creator.email}"></td>
+                <td th:if="${board.manager != null}" th:text="${board.manager.email}"></td><td th:unless="${board.manager != null}">미지정</td>
+                <td th:text="${#temporals.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div>
+            <button type="button" class="btn btn-primary float-right" onclick="location.href='/boards/register';">작성</button>
+        </div>
+    </div>
+</body>
+</html>

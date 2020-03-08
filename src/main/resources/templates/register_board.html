@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.4.1-1/css/bootstrap.css"/>
+    <script type="text/javascript" src="/webjars/jquery/3.4.0/jquery.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/4.4.1-1/js/bootstrap.js"></script>
+    <title>Register Board</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <form action="#" th:action="@{/boards}" th:object="${board}" method="post">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="input-title">제목</label>
+                <input type="text" class="form-control col-sm-10" id="input-title" name="title" aria-describedby="input-title-help" th:field="*{title}" placeholder="제목을 입력하세요.">
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="select-type">분류</label>
+                <select class="form-control col-sm-10" id="select-type" name="csTypeId" th:field="*{csType}">
+                    <option th:each="type:${types}" th:value="${type.id}" th:text="${type.name}"></option>
+                </select>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="select-manager">담당자</label>
+                <select class="form-control col-sm-10" id="select-manager" name="managerId" th:field="*{manager}">
+                    <option value="">선택안함</option>
+                    <option th:each="manager:${managers}" th:value="${manager.id}" th:text="${manager.email}"></option>
+                </select>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="textarea-content">내용</label>
+                <textarea class="form-control col-sm-10" id="textarea-content" name="content" rows="10" th:field="*{content}"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary float-right">등록</button>
+        </form>
+        <button class="btn btn-info float-left" onclick="location.href='/boards';">목록</button>
+    </div>
+</body>
+</html>

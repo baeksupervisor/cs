@@ -1,4 +1,4 @@
-package com.baeksupervisor.cs;
+package com.baeksupervisor.ticket;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

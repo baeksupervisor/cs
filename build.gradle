@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-group = 'com.baeksupervisor.springbootdemo'
+group = 'com.baeksupervisor'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 

@@ -22,18 +22,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="board: ${boards}">
-                <td th:text="${board.id}"></td>
-                <td th:text="${board.csType.name}"></td>
-                <td th:text="${board.title}"></td>
-                <td th:text="${board.creator.email}"></td>
-                <td th:if="${board.manager != null}" th:text="${board.manager.email}"></td><td th:unless="${board.manager != null}">미지정</td>
-                <td th:text="${#temporals.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
+            <tr th:each="ticket: ${tickets}">
+                <td th:text="${ticket.id}"></td>
+                <td th:text="${ticket.ticketType.name}"></td>
+                <td><a th:href="@{'/tickets/' + ${ticket.id}}" th:text="${ticket.title}" target="_blank"></a></td>
+                <td th:text="${ticket.creator.email}"></td>
+                <td th:if="${ticket.manager != null}" th:text="${ticket.manager.email}"></td><td th:unless="${ticket.manager != null}">미지정</td>
+                <td th:text="${#temporals.format(ticket.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
             </tr>
             </tbody>
         </table>
         <div>
-            <button type="button" class="btn btn-primary float-right" onclick="location.href='/boards/register';">작성</button>
+            <button type="button" class="btn btn-primary float-right" onclick="location.href='/tickets/register';">작성</button>
         </div>
     </div>
 </body>

@@ -1,4 +1,4 @@
-package com.baeksupervisor.cs.persistence;
+package com.baeksupervisor.ticket.persistence;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Seunghyun.Baek
@@ -18,17 +20,20 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Board implements Serializable {
+public class Ticket implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
-    private CsType csType;
+    private TicketType ticketType;
 
     private String title;
 
     private String content;
+
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Attachment> attachments = new ArrayList<>();
 
     @ManyToOne(optional = false)
     private User creator;
@@ -42,11 +47,11 @@ public class Board implements Serializable {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public static Board of(String title, User user, CsType csType) {
-        Board board = new Board();
-        board.csType = csType;
-        board.title = title;
-        board.creator = user;
-        return board;
+    public static Ticket of(String title, User user, TicketType ticketType) {
+        Ticket ticket = new Ticket();
+        ticket.ticketType = ticketType;
+        ticket.title = title;
+        ticket.creator = user;
+        return ticket;
     }
 }

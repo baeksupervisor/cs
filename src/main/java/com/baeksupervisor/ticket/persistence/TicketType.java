@@ -1,4 +1,4 @@
-package com.baeksupervisor.cs.persistence;
+package com.baeksupervisor.ticket.persistence;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,30 +8,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * Created by Seunghyun.Baek
- * Since 2020/03/08
+ * Since 2020/03/06
  */
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
-public class User implements Serializable {
+public class TicketType {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private String email;
-
     private String name;
 
-    public static User of(String email, String name) {
-        User user = new User();
-        user.email = email;
-        user.name = name;
-        return user;
+    public static TicketType of(String name) {
+        TicketType csSuperType = new TicketType();
+        csSuperType.name = name;
+        return csSuperType;
     }
 }

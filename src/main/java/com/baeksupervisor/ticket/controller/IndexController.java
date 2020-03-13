@@ -1,4 +1,4 @@
-package com.baeksupervisor.cs.controller;
+package com.baeksupervisor.ticket.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

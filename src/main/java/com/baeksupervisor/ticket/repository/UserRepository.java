@@ -1,6 +1,6 @@
-package com.baeksupervisor.cs.repository;
+package com.baeksupervisor.ticket.repository;
 
-import com.baeksupervisor.cs.persistence.User;
+import com.baeksupervisor.ticket.persistence.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

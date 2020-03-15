@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -43,9 +44,19 @@ public class Attachment implements Serializable {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Setter
-    @Transient
-    private MultipartFile multipartFile;
+    public static Attachment getInstance(MultipartFile multipartFile) {
+        try {
+            Attachment attachment = new Attachment();
+            attachment.blob = multipartFile.getBytes();
+            attachment.originalFilename = multipartFile.getOriginalFilename();
+            attachment.fileSize = multipartFile.getSize();
+            attachment.mimeType = multipartFile.getContentType();
+            return attachment;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public String base64Image() {
         return Base64.getEncoder().encodeToString(this.blob);

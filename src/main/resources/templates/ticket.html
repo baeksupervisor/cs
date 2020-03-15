@@ -38,11 +38,82 @@
             <label class="col-sm-2 col-form-label" for="textarea-content">내용</label>
             <textarea class="form-control col-sm-10" id="textarea-content" name="content" rows="10" th:text="${ticket.content}" readonly="readonly"></textarea>
         </div>
-        <div class="form-group row" th:each="attachment: ${ticket.attachments}">
+        <div class="form-group row">
             <label class="col-sm-2 col-form-label" for="img-file">첨부파일</label>
-            <img class="form-control col-sm-10" id="img-file" th:src="@{'data:' + ${attachment.mimeType} + ';base64,' + ${attachment.base64Image()}}" th:alt="${attachment.filename}" style="height: auto;" />
+            <div class="col-sm-10">
+                <div class="row" th:each="attachment: ${ticket.attachments}">
+                    <img class="form-control col-sm-10" id="img-file" th:src="@{'data:' + ${attachment.mimeType} + ';base64,' + ${attachment.base64Image()}}" th:alt="${attachment.filename}" style="height: auto;" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">댓글</label>
+            <div class="col-sm-10 list-group">
+                <div class="list-group">
+                    <div class="list-group-item" th:each="comment: ${ticket.comments}">
+                        <p class="list-group-item-text text-break" th:text="${comment.message}"></p>
+                        <small class="float-right" th:text="${comment.creator} + '&nbsp;&nbsp;' + ${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></small>
+                    </div>
+                </div>
+            </div>
         </div>
         <button class="btn btn-info float-left" onclick="location.href='/tickets';">목록</button>
+        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#commentModal" data-whatever="@channel">Register comment for @channel</button>
+    </div>
+
+    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true" th:attr="data-ticketId=${ticket.id}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New comment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnRegisterComment">Register comment</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
+<script>
+    $('#commentModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var recipient = button.data('whatever'); // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this);
+        modal.find('.modal-title').text('New message to ' + recipient);
+        modal.find('.modal-body input').val(recipient);
+        modal.find('.modal-body textarea').val('');
+    });
+    $('#btnRegisterComment').off('click').on('click', function() {
+        var modal = $(this).parents('div.modal');
+        var ticketId = modal.attr('data-ticketId');
+        var comment = modal.find('div.modal-body textarea').val();
+
+        $.ajax({
+            url: '/tickets/'+ticketId+'/comments',
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({message: comment})
+        }).done(function(data) {
+            location.reload();
+        });
+    })
+</script>
 </html>

@@ -32,13 +32,13 @@
                 <label class="col-sm-2 col-form-label" for="textarea-content">내용</label>
                 <textarea class="form-control col-sm-10" id="textarea-content" name="content" rows="10" th:field="*{content}"></textarea>
             </div>
-            <div class="form-group row custom-file">
-                <input type="file" class="custom-file-input" id="input-file1" name="uploadFile" th:field="*{attachments[__${0}__].multipartFile}">
-                <label class="custom-file-label" for="input-file1">Choose file</label>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="input-file1">Choose file</label>
+                <input class="col-sm-10 form-control-file" type="file" id="input-file1" name="uploadFile" th:field="*{multipartFiles}">
             </div>
-            <div class="form-group row custom-file row">
-                <input type="file" class="custom-file-input" id="input-file2" name="uploadFile" th:field="*{attachments[__${1}__].multipartFile}">
-                <label class="custom-file-label" for="input-file2">Choose file</label>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="input-file2">Choose file</label>
+                <input class="col-sm-10 form-control-file" type="file" id="input-file2" name="uploadFile" th:field="*{multipartFiles}">
             </div>
             <button type="submit" class="btn btn-primary float-right">등록</button>
         </form>

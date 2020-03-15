@@ -2,19 +2,22 @@ package com.baeksupervisor.ticket.controller;
 
 import com.baeksupervisor.ticket.exception.ResourceNotFoundException;
 import com.baeksupervisor.ticket.model.TicketView;
+import com.baeksupervisor.ticket.persistence.Attachment;
+import com.baeksupervisor.ticket.persistence.Comment;
 import com.baeksupervisor.ticket.persistence.Ticket;
+import com.baeksupervisor.ticket.repository.CommentRepository;
 import com.baeksupervisor.ticket.repository.TicketRepository;
 import com.baeksupervisor.ticket.repository.TicketTypeRepository;
 import com.baeksupervisor.ticket.repository.UserRepository;
+import com.baeksupervisor.ticket.service.TicketService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by Seunghyun.Baek
@@ -25,13 +28,17 @@ import java.io.IOException;
 @RequestMapping("/tickets")
 public class TicketController {
 
+    private final TicketService ticketService;
     private final TicketTypeRepository csTypeRepository;
     private final TicketRepository ticketRepository;
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
-    public TicketController(TicketTypeRepository csTypeRepository, TicketRepository ticketRepository, UserRepository userRepository) {
+    public TicketController(TicketService ticketService, TicketTypeRepository csTypeRepository, TicketRepository ticketRepository, CommentRepository commentRepository, UserRepository userRepository) {
+        this.ticketService = ticketService;
         this.csTypeRepository = csTypeRepository;
         this.ticketRepository = ticketRepository;
+        this.commentRepository = commentRepository;
         this.userRepository = userRepository;
     }
 
@@ -61,18 +68,19 @@ public class TicketController {
     public String postTicket(Ticket ticket) throws IOException {
         log.info("{}", ticket);
         ticket.setCreator(userRepository.findByEmail("shbaek159@gmail.com").get());
-//        ticket.setFile(ticket.getUploadFile().getBytes());
-        ticket.getAttachments().forEach(o -> {
-            try {
-                o.setBlob(o.getMultipartFile().getBytes());
-                o.setOriginalFilename(o.getMultipartFile().getOriginalFilename());
-                o.setFileSize(o.getMultipartFile().getSize());
-                o.setMimeType(o.getMultipartFile().getContentType());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        ticket.setAttachments(ticket.getMultipartFiles()
+                .stream()
+                .filter(o -> !o.isEmpty())
+                .map(Attachment::getInstance)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()));
         ticketRepository.save(ticket);
         return "redirect:/tickets";
+    }
+
+    @ResponseBody
+    @PostMapping("/{id}/comments")
+    public Comment postComment(@PathVariable(value = "id") Long ticketId, @RequestBody Comment comment) {
+        return ticketService.saveComment(ticketId, comment);
     }
 }

@@ -11,7 +11,7 @@
 <body>
     <div class="container-fluid">
         <table class="table table-striped">
-            <thead>
+            <thead class="thead-dark">
             <tr>
                 <th>No</th>
                 <th>분류</th>
@@ -25,7 +25,7 @@
             <tr th:each="ticket: ${tickets}">
                 <td th:text="${ticket.id}"></td>
                 <td th:text="${ticket.ticketType.name}"></td>
-                <td><a th:href="@{'/tickets/' + ${ticket.id}}" th:text="${ticket.title}" target="_blank"></a></td>
+                <td><a th:href="@{'/tickets/' + ${ticket.id}}" th:text="${ticket.title}" target="_blank"></a><span class="badge badge-info float-right" th:text="${ticket.comments.size()}"></span></td>
                 <td th:text="${ticket.creator.email}"></td>
                 <td th:if="${ticket.manager != null}" th:text="${ticket.manager.email}"></td><td th:unless="${ticket.manager != null}">미지정</td>
                 <td th:text="${#temporals.format(ticket.createdAt, 'yyyy.MM.dd HH:mm')}"></td>

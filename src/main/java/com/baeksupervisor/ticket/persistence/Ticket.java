@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -35,6 +36,9 @@ public class Ticket implements Serializable {
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Attachment> attachments = new ArrayList<>();
 
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
     @ManyToOne(optional = false)
     private User creator;
 
@@ -46,6 +50,9 @@ public class Ticket implements Serializable {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Transient
+    private List<MultipartFile> multipartFiles = new ArrayList<>();
 
     public static Ticket of(String title, User user, TicketType ticketType) {
         Ticket ticket = new Ticket();

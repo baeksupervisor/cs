@@ -31,6 +31,8 @@ public class TicketView implements Serializable {
 
     private List<TicketAttachmentView> attachments;
 
+    private List<TicketCommentView> comments;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -50,6 +52,11 @@ public class TicketView implements Serializable {
         view.attachments = ticket.getAttachments()
                 .stream()
                 .map(TicketAttachmentView::getInstance)
+                .filter(o -> Objects.nonNull(o.getFile()))
+                .collect(Collectors.toList());
+        view.comments = ticket.getComments()
+                .stream()
+                .map(TicketCommentView::getInstance)
                 .collect(Collectors.toList());
         return view;
     }

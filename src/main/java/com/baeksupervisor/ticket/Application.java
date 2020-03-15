@@ -1,5 +1,6 @@
 package com.baeksupervisor.ticket;
 
+import com.baeksupervisor.ticket.persistence.Comment;
 import com.baeksupervisor.ticket.persistence.Ticket;
 import com.baeksupervisor.ticket.persistence.TicketType;
 import com.baeksupervisor.ticket.persistence.User;
@@ -53,10 +54,15 @@ public class Application implements CommandLineRunner {
         users.add(User.of("user1@email.com", "user1"));
         userRepository.saveAll(users);
 
+        List<Comment> comments = new ArrayList<>();
+        comments.add(Comment.of("first\n이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.", users.get(0)));
+        comments.add(Comment.of("second\n이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.", users.get(0)));
+
         List<Ticket> tickets = new ArrayList<>();
         Ticket ticket = Ticket.of("재고알랴줌?", userRepository.findByEmail("user1@email.com").get(), ticketTypeRepository.findByName("재고문의").orElse(null));
         ticket.setManager(userRepository.findByEmail("shbaek159@gmail.com").get());
         ticket.setContent("재고안알랴줌!~!");
+        ticket.setComments(comments);
         tickets.add(ticket);
         tickets.add(Ticket.of("포인트안줌?", userRepository.findByEmail("user1@email.com").get(), ticketTypeRepository.findByName("포인트문의").orElse(null)));
         ticketRepository.saveAll(tickets);

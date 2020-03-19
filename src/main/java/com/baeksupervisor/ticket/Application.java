@@ -7,6 +7,7 @@ import com.baeksupervisor.ticket.persistence.User;
 import com.baeksupervisor.ticket.repository.TicketRepository;
 import com.baeksupervisor.ticket.repository.TicketTypeRepository;
 import com.baeksupervisor.ticket.repository.UserRepository;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -50,8 +51,9 @@ public class Application implements CommandLineRunner {
         ticketTypeRepository.saveAll(ticketTypes);
 
         List<User> users = new ArrayList<>();
-        users.add(User.of("shbaek159@gmail.com", "shbaek"));
-        users.add(User.of("user1@email.com", "user1"));
+        users.add(User.of("shbaek159@gmail.com", "shbaek", DigestUtils.sha256Hex("1234")));
+        users.add(User.of("user1@email.com", "user1",DigestUtils.sha256Hex("1234")));
+        users.add(User.of("neptunembh@gmail.com", "bhmin",DigestUtils.sha256Hex("1234")));
         userRepository.saveAll(users);
 
         List<Comment> comments = new ArrayList<>();

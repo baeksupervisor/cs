@@ -1,21 +1,26 @@
 package com.baeksupervisor.ticket.controller;
 
+import com.baeksupervisor.ticket.config.UserDetailsHolder;
 import com.baeksupervisor.ticket.exception.ResourceNotFoundException;
+import com.baeksupervisor.ticket.model.SupportUserDetails;
 import com.baeksupervisor.ticket.model.TicketView;
 import com.baeksupervisor.ticket.persistence.Attachment;
 import com.baeksupervisor.ticket.persistence.Comment;
 import com.baeksupervisor.ticket.persistence.Ticket;
+import com.baeksupervisor.ticket.persistence.User;
 import com.baeksupervisor.ticket.repository.CommentRepository;
 import com.baeksupervisor.ticket.repository.TicketRepository;
 import com.baeksupervisor.ticket.repository.TicketTypeRepository;
 import com.baeksupervisor.ticket.repository.UserRepository;
 import com.baeksupervisor.ticket.service.TicketService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -65,9 +70,11 @@ public class TicketController {
     }
 
     @PostMapping("")
-    public String postTicket(Ticket ticket) throws IOException {
+    public String postTicket(Ticket ticket) throws Exception {
         log.info("{}", ticket);
-        ticket.setCreator(userRepository.findByEmail("shbaek159@gmail.com").get());
+        User user = UserDetailsHolder.getUserDetails().getUser();
+
+        ticket.setCreator(userRepository.findByEmail(user.getEmail()).get());
         ticket.setAttachments(ticket.getMultipartFiles()
                 .stream()
                 .filter(o -> !o.isEmpty())
@@ -80,7 +87,7 @@ public class TicketController {
 
     @ResponseBody
     @PostMapping("/{id}/comments")
-    public Comment postComment(@PathVariable(value = "id") Long ticketId, @RequestBody Comment comment) {
+    public Comment postComment(@PathVariable(value = "id") Long ticketId, @RequestBody Comment comment) throws Exception {
         return ticketService.saveComment(ticketId, comment);
     }
 }

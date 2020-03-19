@@ -26,12 +26,16 @@ public class User implements Serializable {
     @NotNull
     private String email;
 
+    @NotNull
+    private String password;
+
     private String name;
 
-    public static User of(String email, String name) {
+    public static User of(String email, String name, String password) {
         User user = new User();
         user.email = email;
         user.name = name;
+        user.password = password;
         return user;
     }
 }

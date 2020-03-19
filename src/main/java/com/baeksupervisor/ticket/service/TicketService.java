@@ -1,8 +1,10 @@
 package com.baeksupervisor.ticket.service;
 
+import com.baeksupervisor.ticket.config.UserDetailsHolder;
 import com.baeksupervisor.ticket.exception.ResourceNotFoundException;
 import com.baeksupervisor.ticket.persistence.Comment;
 import com.baeksupervisor.ticket.persistence.Ticket;
+import com.baeksupervisor.ticket.persistence.User;
 import com.baeksupervisor.ticket.repository.CommentRepository;
 import com.baeksupervisor.ticket.repository.TicketRepository;
 import com.baeksupervisor.ticket.repository.UserRepository;
@@ -27,7 +29,10 @@ public class TicketService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Comment saveComment(Long ticketId, Comment comment) {
+    public Comment saveComment(Long ticketId, Comment comment) throws Exception {
+
+        User user = UserDetailsHolder.getUserDetails().getUser();
+
         comment.setCreator(userRepository.findByEmail("shbaek159@gmail.com").get());
         commentRepository.save(comment);
 

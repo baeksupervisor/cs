@@ -1,9 +1,6 @@
 package com.baeksupervisor.ticket;
 
-import com.baeksupervisor.ticket.persistence.Comment;
-import com.baeksupervisor.ticket.persistence.Ticket;
-import com.baeksupervisor.ticket.persistence.TicketType;
-import com.baeksupervisor.ticket.persistence.User;
+import com.baeksupervisor.ticket.persistence.*;
 import com.baeksupervisor.ticket.repository.TicketRepository;
 import com.baeksupervisor.ticket.repository.TicketTypeRepository;
 import com.baeksupervisor.ticket.repository.UserRepository;
@@ -60,11 +57,17 @@ public class Application implements CommandLineRunner {
         comments.add(Comment.of("first\n이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.", users.get(0)));
         comments.add(Comment.of("second\n이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.이것은 댓글이지.", users.get(0)));
 
+        Reply reply1 = new Reply();
+        reply1.setProcessingType("데이터 수정");
+        reply1.setContent("DB 수정했다.");
+        reply1.setCreator(userRepository.findByEmail("shbaek159@gmail.com").get());
+
         List<Ticket> tickets = new ArrayList<>();
         Ticket ticket = Ticket.of("재고알랴줌?", userRepository.findByEmail("user1@email.com").get(), ticketTypeRepository.findByName("재고문의").orElse(null));
         ticket.setManager(userRepository.findByEmail("shbaek159@gmail.com").get());
         ticket.setContent("재고안알랴줌!~!");
         ticket.setComments(comments);
+        ticket.addReply(reply1);
         tickets.add(ticket);
         tickets.add(Ticket.of("포인트안줌?", userRepository.findByEmail("user1@email.com").get(), ticketTypeRepository.findByName("포인트문의").orElse(null)));
         ticketRepository.saveAll(tickets);

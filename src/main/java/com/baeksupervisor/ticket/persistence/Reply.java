@@ -15,21 +15,18 @@ import java.util.List;
 
 /**
  * Created by Seunghyun.Baek
- * Since 2020/03/06
+ * Since 2020/03/20
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class Ticket implements Serializable {
+public class Reply implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    private TicketType ticketType;
-
-    private String title;
+    private String processingType;
 
     private String content;
 
@@ -39,14 +36,11 @@ public class Ticket implements Serializable {
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ticket", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Reply> replies = new ArrayList<>();
-
     @ManyToOne(optional = false)
     private User creator;
 
     @ManyToOne
-    private User manager;
+    private Ticket ticket;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -56,17 +50,4 @@ public class Ticket implements Serializable {
 
     @Transient
     private List<MultipartFile> multipartFiles = new ArrayList<>();
-
-    public static Ticket of(String title, User user, TicketType ticketType) {
-        Ticket ticket = new Ticket();
-        ticket.ticketType = ticketType;
-        ticket.title = title;
-        ticket.creator = user;
-        return ticket;
-    }
-
-    public void addReply(Reply reply) {
-        this.getReplies().add(reply);
-        reply.setTicket(this);
-    }
 }
